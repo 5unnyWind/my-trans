@@ -182,7 +182,7 @@ export default function Home() {
               onChange={(e) => setInputText(e.target.value)}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              className="w-full h-full bg-transparent border-none outline-none resize-none text-white text-lg font-semibold placeholder-gray-300 caret-transparent"
+              className="w-full h-full bg-transparent border-none outline-none resize-none text-foreground text-lg font-semibold placeholder-gray-300 caret-transparent"
               style={{ caretColor: 'transparent' }}
             />
             <InputCursor position={cursorPosition} />
