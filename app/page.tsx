@@ -178,7 +178,7 @@ export default function Home() {
   }, [inputText]);
 
   return (
-    <div className="h-[100dvh] bg-background" style={{
+    <div className="h-[100dvh] w-screen overflow-hidden bg-background" style={{
       paddingBottom:'env(safe-area-inset-bottom)',
       
     }}>
@@ -259,10 +259,13 @@ export default function Home() {
                   setSelectedLanguage(language.value);
                   localStorage.setItem('selectedLanguage', language.value);
                 }}
-                className={`${isSelected ? 'mt-0' : 'mt-6'} h-full shrink-0 rounded-t-2xl px-4 py-2 text-black font-semibold backdrop-blur-sm border shadow-lg cursor-pointer transition-all duration-300 ${isSelected ? 'border-white/60' : 'border-white/30'}`}
+                className={`h-full shrink-0 rounded-t-2xl px-4 py-2 text-black font-semibold backdrop-blur-sm border shadow-lg cursor-pointer ${isSelected ? 'border-white/60' : 'border-white/30'}`}
                 style={{
                   background: `linear-gradient(135deg, ${colors[colorIndex]}${isSelected ? 'FF' : '80'}, ${colors[nextColorIndex]}${isSelected ? 'FF' : '80'})`,
-                  backdropFilter: 'blur(10px)'
+                  backdropFilter: 'blur(10px)',
+                  transform: `translateY(${isSelected ? '0px' : '24px'})`,
+                  transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease-in-out, border-color 0.2s ease-in-out',
+                  willChange: 'transform'
                 }}>
                 {language.label}
               </div>
