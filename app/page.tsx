@@ -27,13 +27,38 @@ const languages = [
   { value: "Basque", label: "巴斯克语" },
 ];
 
+const generateRandomGlow = () => ({
+  width: Math.random() * 160 + 100,
+  height: Math.random() * 160 + 100,
+  top: Math.random() * 60,
+  left: Math.random() * 200 - 50,
+  opacity: Math.random() * 0.4 + 0.1,
+  rotation: Math.random() * 360,
+  borderRadius: `${Math.random() * 30 + 30}% ${Math.random() * 40 + 30}% ${Math.random() * 40 + 30}% ${Math.random() * 30 + 40}% / ${Math.random() * 30 + 30}% ${Math.random() * 40 + 30}% ${Math.random() * 40 + 30}% ${Math.random() * 30 + 40}%`
+});
+
 export default function Home() {
   const [inputText, setInputText] = useState("");
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   console.log('cursorPosition', cursorPosition);
   const [isFocused, setIsFocused] = useState(false);
+  const [glows, setGlows] = useState<{ width: number; height: number; top: number; left: number; opacity: number; rotation: number; borderRadius: string; color: string; visible: boolean }[]>([]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const newGlows = [
+      { ...generateRandomGlow(), color: '#4B3C9E', visible: false },
+      { ...generateRandomGlow(), color: '#190E9A', visible: false }
+    ];
+    
+    setGlows(newGlows);
+    
+    // 延迟显示光晕
+    setTimeout(() => {
+      setGlows(prev => prev.map(glow => ({ ...glow, visible: true })));
+    }, 100);
+  }, []);
 
   const updateCursorPosition = () => {
     if (!inputRef.current || !containerRef.current) return;
@@ -106,20 +131,25 @@ export default function Home() {
       <div className="bg-background h-[60%] flex items-center justify-center">
         <h1 className="text-4xl font-bold">Translate</h1>
       </div>
-      <div className="bg-primary h-[40%] rounded-tl-[20vw] relative overflow-hidden">
-        <div className="absolute top-10 left-0 w-[300px] h-[100px] rounded-full blur-3xl opacity-80" style={{
-          background: '#4B3C9E',
-          boxShadow: '0 0 60px 30px #4B3C9E, 0 0 120px 60px rgba(75, 60, 158, 0.5)'
-        }} />
-        <div className="absolute top-10 right-0 w-[300px] h-[100px] rounded-full blur-3xl opacity-80" style={{
-          background: '#190E9A',
-          boxShadow: '0 0 60px 30px #190E9A, 0 0 120px 60px rgba(25, 14, 154, 0.5)'
-        }} />
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 w-[200px] h-[80px] rounded-full blur-3xl opacity-70" style={{
-          background: '#1A318D',
-          boxShadow: '0 0 50px 25px #1A318D, 0 0 100px 50px rgba(26, 49, 141, 0.4)'
-        }} />
-        
+      <div className="bg-primary/80 h-[40%] rounded-tl-[20vw] relative overflow-hidden backdrop-blur-sm border-t border-l border-white/10"
+        style={{
+          background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.1) 0%, transparent 50%)',
+          backdropFilter: 'blur(10px)'
+        }}>
+        {glows.map((glow, index) => (
+          <div key={index} className="absolute blur-3xl transition-opacity duration-1000 ease-in-out" style={{
+            top: `${glow.top}%`,
+            left: `${glow.left}%`,
+            width: `${glow.width}px`,
+            height: `${glow.height}px`,
+            opacity: glow.visible ? glow.opacity : 0,
+            background: glow.color,
+            boxShadow: `0 0 60px 30px ${glow.color}, 0 0 120px 60px ${glow.color}40`,
+            borderRadius: glow.borderRadius,
+            transform: `rotate(${glow.rotation}deg)`
+          }} />
+        ))}
+
         {/* 输入区域 */}
         <div className="px-20 pt-20 pb-4 h-[80%]">
           <div ref={containerRef} className="relative w-full h-full">
