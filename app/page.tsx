@@ -171,7 +171,7 @@ export default function Home() {
         </div>
 
         {/* 目标语言选择 */}
-        <div className='flex items-center w-full overflow-x-auto  pr-20 h-full'>
+        <div className='relative flex items-center w-full overflow-x-auto  pr-20 h-full'>
           {languagesOptions.map((language, index) => {
             const colors = ['#FFFFFF', '#FFFEC4', '#B8FFA5', '#53BDA7', '#509BEB', '#C4EFFE', '#65C3FC', '#7CEFDF', '#72FEAE', '#44D77D', '#37BE8E', '#45B3B0', '#FFF6FF'];
             const colorIndex = index % colors.length;
@@ -181,7 +181,7 @@ export default function Home() {
               <div 
                 key={language.value} 
                 onClick={() => setSelectedLanguage(language.value)}
-                className={`${isSelected ? 'mt-0' : 'mt-8'} h-full shrink-0 rounded-t-2xl px-4 py-2 text-black font-semibold backdrop-blur-sm border shadow-lg cursor-pointer transition-all duration-300 ${isSelected ? 'border-white/60' : 'border-white/30'}`} 
+                className={`${isSelected ? 'mt-0' : 'mt-9'} h-full shrink-0 rounded-t-2xl px-4 py-2 text-black font-semibold backdrop-blur-sm border shadow-lg cursor-pointer transition-all duration-300 ${isSelected ? 'border-white/60' : 'border-white/30'}`} 
                 style={{
                   background: `linear-gradient(135deg, ${colors[colorIndex]}${isSelected ? 'FF' : '80'}, ${colors[nextColorIndex]}${isSelected ? 'FF' : '80'})`,
                   backdropFilter: 'blur(10px)'
@@ -192,9 +192,9 @@ export default function Home() {
           })}
         </div>
         {/* 提交 */}
-        <div className="absolute right-2 top-2">
-          <button className="bg-white text-black px-4 py-2 rounded-full">提交</button>
-        </div>
+        {/* <div className="absolute right-2 bottom-2">
+          <button className="bg-white text-black px-4 py-2 rounded-full">⬆️</button>
+        </div> */}
       </div>
     </div>
   );
