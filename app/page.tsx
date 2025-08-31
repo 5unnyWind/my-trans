@@ -43,6 +43,7 @@ export default function Home() {
   console.log('cursorPosition', cursorPosition);
   const [isFocused, setIsFocused] = useState(false);
   const [glows, setGlows] = useState<{ width: number; height: number; top: number; left: number; opacity: number; rotation: number; borderRadius: string; color: string; visible: boolean }[]>([]);
+  const [selectedLanguage, setSelectedLanguage] = useState("English");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -170,16 +171,21 @@ export default function Home() {
         </div>
 
         {/* 目标语言选择 */}
-        <div className='mt-2 flex items-center w-full overflow-x-auto  pr-20 h-full'>
+        <div className='flex items-center w-full overflow-x-auto  pr-20 h-full'>
           {languagesOptions.map((language, index) => {
             const colors = ['#FFFFFF', '#FFFEC4', '#B8FFA5', '#53BDA7', '#509BEB', '#C4EFFE', '#65C3FC', '#7CEFDF', '#72FEAE', '#44D77D', '#37BE8E', '#45B3B0', '#FFF6FF'];
             const colorIndex = index % colors.length;
             const nextColorIndex = (index + 1) % colors.length;
+            const isSelected = selectedLanguage === language.value;
             return (
-              <div key={language.value} className="h-full shrink-0 rounded-t-3xl px-4 py-2 text-black font-semibold backdrop-blur-sm border border-white/30 shadow-lg" style={{
-                background: `linear-gradient(135deg, ${colors[colorIndex]}80, ${colors[nextColorIndex]}80)`,
-                backdropFilter: 'blur(10px)'
-              }}>
+              <div 
+                key={language.value} 
+                onClick={() => setSelectedLanguage(language.value)}
+                className={`${isSelected ? 'mt-0' : 'mt-8'} h-full shrink-0 rounded-t-2xl px-4 py-2 text-black font-semibold backdrop-blur-sm border shadow-lg cursor-pointer transition-all duration-300 ${isSelected ? 'border-white/60' : 'border-white/30'}`} 
+                style={{
+                  background: `linear-gradient(135deg, ${colors[colorIndex]}${isSelected ? 'FF' : '80'}, ${colors[nextColorIndex]}${isSelected ? 'FF' : '80'})`,
+                  backdropFilter: 'blur(10px)'
+                }}>
                 {language.label}
               </div>
             );
