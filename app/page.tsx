@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import InputCursor from "./InputCursor";
 
-const languages = [
+const languagesOptions = [
   { value: "English", label: "英文" },
   { value: "Chinese", label: "中文（简体）" },
   { value: "Traditional Chinese", label: "中文（繁体）" },
@@ -51,9 +51,9 @@ export default function Home() {
       { ...generateRandomGlow(), color: '#4B3C9E', visible: false },
       { ...generateRandomGlow(), color: '#190E9A', visible: false }
     ];
-    
+
     setGlows(newGlows);
-    
+
     // 延迟显示光晕
     setTimeout(() => {
       setGlows(prev => prev.map(glow => ({ ...glow, visible: true })));
@@ -128,14 +128,17 @@ export default function Home() {
 
   return (
     <div className="h-screen bg-background">
+
       <div className="bg-background h-[60%] flex items-center justify-center">
         <h1 className="text-4xl font-bold">Translate</h1>
       </div>
+
       <div className="bg-primary/80 h-[40%] rounded-tl-[20vw] relative overflow-hidden backdrop-blur-sm border-t border-l border-white/10"
         style={{
           background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.1) 0%, transparent 50%)',
           backdropFilter: 'blur(10px)'
         }}>
+        {/* 光晕 */}
         {glows.map((glow, index) => (
           <div key={index} className="absolute blur-3xl transition-opacity duration-1000 ease-in-out" style={{
             top: `${glow.top}%`,
@@ -165,9 +168,26 @@ export default function Home() {
             <InputCursor position={cursorPosition} />
           </div>
         </div>
-        {/* 语言选择 */}
-        <div className="p-2 flex items-center w-full overflow-x-auto">
-          <div className="shrink-0  bg-white rounded-full px-4 py-2 text-black font-semibold">英语</div>
+
+        {/* 目标语言选择 */}
+        <div className='mt-2 flex items-center w-full overflow-x-auto  pr-20 h-full'>
+          {languagesOptions.map((language, index) => {
+            const colors = ['#FFFFFF', '#FFFEC4', '#B8FFA5', '#53BDA7', '#509BEB', '#C4EFFE', '#65C3FC', '#7CEFDF', '#72FEAE', '#44D77D', '#37BE8E', '#45B3B0', '#FFF6FF'];
+            const colorIndex = index % colors.length;
+            const nextColorIndex = (index + 1) % colors.length;
+            return (
+              <div key={language.value} className="h-full shrink-0 rounded-t-3xl px-4 py-2 text-black font-semibold backdrop-blur-sm border border-white/30 shadow-lg" style={{
+                background: `linear-gradient(135deg, ${colors[colorIndex]}80, ${colors[nextColorIndex]}80)`,
+                backdropFilter: 'blur(10px)'
+              }}>
+                {language.label}
+              </div>
+            );
+          })}
+        </div>
+        {/* 提交 */}
+        <div className="absolute right-2 top-2">
+          <button className="bg-white text-black px-4 py-2 rounded-full">提交</button>
         </div>
       </div>
     </div>
