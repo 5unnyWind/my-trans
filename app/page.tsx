@@ -74,7 +74,7 @@ export default function Home() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { data: translatedText } = useRequest(
+  const { data: translatedText,loading } = useRequest(
     async () => {
       if (!inputText.trim()) return "";
       const res = await fetch("/api/translate", {
@@ -186,9 +186,9 @@ export default function Home() {
             mode="multi"
             min={16}
             max={32}
-            className="w-full h-full flex items-center justify-center font-semibold text-center text-[32px]"
+            className={`w-full h-full flex items-center justify-center font-semibold text-center text-[32px] ${loading ? 'animate-pulse' : ''}`}
           >
-            {translatedText || 'Ready to translate.'}
+             {translatedText || 'Ready to translate.'}
           </Textfit>
         </div>
         {/* 复制按钮 */}
