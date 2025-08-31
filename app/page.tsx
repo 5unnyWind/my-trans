@@ -159,7 +159,10 @@ export default function Home() {
   }, [inputText]);
 
   return (
-    <div className="h-screen bg-background">
+    <div className="h-screen bg-background" style={{
+      paddingBottom:'env(safe-area-inset-bottom)',
+      
+    }}>
       {/* 翻译后文本 */}
       <div className="bg-background h-[60%] flex items-center justify-center px-8">
         <div className="w-full h-full max-h-[80%] overflow-auto">
@@ -211,7 +214,7 @@ export default function Home() {
         </div>
 
         {/* 目标语言选择 */}
-        <div className='relative flex items-center w-full overflow-x-auto  pr-20 h-full'>
+        <div className='relative flex items-center w-full overflow-x-auto overflow-y-hidden  pr-20 h-full'>
           {languagesOptions.map((language, index) => {
             const colors = ['#FFFFFF', '#FFFEC4', '#B8FFA5', '#53BDA7', '#509BEB', '#C4EFFE', '#65C3FC', '#7CEFDF', '#72FEAE', '#44D77D', '#37BE8E', '#45B3B0', '#FFF6FF'];
             const colorIndex = index % colors.length;
