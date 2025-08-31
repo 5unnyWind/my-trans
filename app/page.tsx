@@ -46,6 +46,7 @@ export default function Home() {
   const [isFocused, setIsFocused] = useState(false);
   const [glows, setGlows] = useState<{ width: number; height: number; top: number; left: number; opacity: number; rotation: number; borderRadius: string; color: string; visible: boolean }[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const languageRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   
   useEffect(() => {
     const savedLanguage = localStorage.getItem('selectedLanguage');
@@ -53,6 +54,23 @@ export default function Home() {
       setSelectedLanguage(savedLanguage);
     }
   }, []);
+
+  useEffect(() => {
+    // 当选择的语言改变时，平滑滚动到对应元素
+    const selectedElement = languageRefs.current[selectedLanguage];
+    if (selectedElement && selectedElement.parentElement) {
+      const container = selectedElement.parentElement;
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = selectedElement.getBoundingClientRect();
+      
+      const scrollLeft = selectedElement.offsetLeft - (containerRect.width / 2) + (elementRect.width / 2);
+      
+      container.scrollTo({
+        left: scrollLeft,
+        behavior: 'smooth'
+      });
+    }
+  }, [selectedLanguage]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -234,6 +252,9 @@ export default function Home() {
             return (
               <div
                 key={language.value}
+                ref={(el) => { 
+                  languageRefs.current[language.value] = el;
+                }}
                 onClick={() => {
                   setSelectedLanguage(language.value);
                   localStorage.setItem('selectedLanguage', language.value);
