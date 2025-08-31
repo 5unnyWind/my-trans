@@ -159,7 +159,7 @@ export default function Home() {
   }, [inputText]);
 
   return (
-    <div className="h-screen bg-background" style={{
+    <div className="h-[100dvh] bg-background" style={{
       paddingBottom:'env(safe-area-inset-bottom)',
       
     }}>
@@ -170,14 +170,14 @@ export default function Home() {
             mode="multi"
             min={16}
             max={32}
-            className="w-full h-full flex items-center justify-center font-bold text-center"
+            className="w-full h-full flex items-center justify-center font-semibold text-center text-[32px]"
           >
-            {translatedText || 'Translate'}
+            {translatedText || 'Ready to translate.'}
           </Textfit>
         </div>
       </div>
 
-      <div className="bg-primary/80 h-[40%] rounded-tl-[14rem] relative overflow-hidden backdrop-blur-sm border-t border-l border-white/10"
+      <div className="bg-primary/80 h-[40%] rounded-tl-[12rem] relative overflow-hidden backdrop-blur-sm border-t border-l border-white/10"
         style={{
           background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.1) 0%, transparent 50%)',
           backdropFilter: 'blur(10px)'
@@ -198,7 +198,7 @@ export default function Home() {
         ))}
 
         {/* 输入区域 */}
-        <div className="px-20 pt-20 pb-4 h-[80%]">
+        <div className="px-20 pt-14 pb-2 h-[80%]">
           <div ref={containerRef} className="relative w-full h-full">
             <textarea
               ref={inputRef}
@@ -227,7 +227,7 @@ export default function Home() {
                   setSelectedLanguage(language.value);
                   localStorage.setItem('selectedLanguage', language.value);
                 }}
-                className={`${isSelected ? 'mt-0' : 'mt-9'} h-full shrink-0 rounded-t-2xl px-4 py-2 text-black font-semibold backdrop-blur-sm border shadow-lg cursor-pointer transition-all duration-300 ${isSelected ? 'border-white/60' : 'border-white/30'}`}
+                className={`${isSelected ? 'mt-0' : 'mt-6'} h-full shrink-0 rounded-t-2xl px-4 py-2 text-black font-semibold backdrop-blur-sm border shadow-lg cursor-pointer transition-all duration-300 ${isSelected ? 'border-white/60' : 'border-white/30'}`}
                 style={{
                   background: `linear-gradient(135deg, ${colors[colorIndex]}${isSelected ? 'FF' : '80'}, ${colors[nextColorIndex]}${isSelected ? 'FF' : '80'})`,
                   backdropFilter: 'blur(10px)'
