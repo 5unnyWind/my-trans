@@ -153,7 +153,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold">{ `${translatedText || 'Translate'}`}</h1>
       </div>
 
-      <div className="bg-primary/80 h-[40%] rounded-tl-[20vw] relative overflow-hidden backdrop-blur-sm border-t border-l border-white/10"
+      <div className="bg-primary/80 h-[40%] rounded-tl-[14rem] relative overflow-hidden backdrop-blur-sm border-t border-l border-white/10"
         style={{
           background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.1) 0%, transparent 50%)',
           backdropFilter: 'blur(10px)'
