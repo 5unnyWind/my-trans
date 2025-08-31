@@ -92,15 +92,16 @@ export default function Home() {
     div.style.position = 'absolute';
     div.style.visibility = 'hidden';
     div.style.height = 'auto';
-    div.style.width = input.offsetWidth + 'px';
+    div.style.width = input.clientWidth + 'px'; // 使用clientWidth获取内容宽度
     div.style.fontSize = computedStyle.fontSize;
     div.style.fontFamily = computedStyle.fontFamily;
     div.style.fontWeight = computedStyle.fontWeight;
     div.style.lineHeight = computedStyle.lineHeight;
-    div.style.padding = '0px';
+    div.style.letterSpacing = computedStyle.letterSpacing;
+    div.style.padding = computedStyle.padding;
     div.style.margin = '0px';
     div.style.border = 'none';
-    div.style.boxSizing = 'content-box';
+    div.style.boxSizing = computedStyle.boxSizing;
     div.style.whiteSpace = 'pre-wrap';
     div.style.overflowWrap = 'break-word';
     div.style.left = '0px';
@@ -120,8 +121,9 @@ export default function Home() {
     const markerRect = marker.getBoundingClientRect();
     const divRect = div.getBoundingClientRect();
 
+    // 计算相对于textarea的位置，考虑滚动偏移
     const x = markerRect.left - divRect.left;
-    const y = markerRect.top - divRect.top;
+    const y = markerRect.top - divRect.top - input.scrollTop;
 
     setCursorPosition({ x, y });
 
@@ -139,10 +141,12 @@ export default function Home() {
 
       input.addEventListener('keyup', handleSelectionChange);
       input.addEventListener('mouseup', handleSelectionChange);
+      input.addEventListener('scroll', handleSelectionChange);
 
       return () => {
         input.removeEventListener('keyup', handleSelectionChange);
         input.removeEventListener('mouseup', handleSelectionChange);
+        input.removeEventListener('scroll', handleSelectionChange);
       };
     }
   }, [inputText]);
