@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRequest } from "ahooks";
 import { Textfit } from "react-textfit";
 import InputCursor from "./InputCursor";
+import CopyIcon from "./CopyIcon";
 
 const languagesOptions = [
   { value: "English", label: "英文" },
@@ -164,7 +165,7 @@ export default function Home() {
       
     }}>
       {/* 翻译后文本 */}
-      <div className="bg-background h-[60%] flex items-center justify-center px-8">
+      <div className="bg-background h-[60%] flex items-center justify-center px-8 relative">
         <div className="w-full h-full max-h-[80%] overflow-auto">
           <Textfit
             mode="multi"
@@ -175,6 +176,16 @@ export default function Home() {
             {translatedText || 'Ready to translate.'}
           </Textfit>
         </div>
+        {/* 复制按钮 */}
+        {translatedText && (
+          <div className="absolute top-4 right-4">
+            <CopyIcon 
+              onCopy={() => {
+                navigator.clipboard.writeText(translatedText);
+              }}
+            />
+          </div>
+        )}
       </div>
 
       <div className="bg-primary/80 h-[40%] rounded-tl-[12rem] relative overflow-hidden backdrop-blur-sm border-t border-l border-white/10"
