@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useDebounceFn, useRequest } from "ahooks";
 import InputCursor from "./InputCursor";
 
 const languagesOptions = [
@@ -40,12 +41,30 @@ const generateRandomGlow = () => ({
 export default function Home() {
   const [inputText, setInputText] = useState("");
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  console.log('cursorPosition', cursorPosition);
   const [isFocused, setIsFocused] = useState(false);
   const [glows, setGlows] = useState<{ width: number; height: number; top: number; left: number; opacity: number; rotation: number; borderRadius: string; color: string; visible: boolean }[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState("English");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const { data: translatedText } = useRequest(
+    async () => {
+     if(!inputText.trim()) return "";
+     const res = await fetch("/api/translate", {
+      method: "POST",
+      body: JSON.stringify({
+        content: inputText,
+        targetLanguage: selectedLanguage,
+      }),
+     });
+     return res.json();
+    },
+    {
+      refreshDeps: [inputText, selectedLanguage],
+      debounceWait: 300,
+    }
+  );
+
 
   useEffect(() => {
     const newGlows = [
@@ -131,7 +150,7 @@ export default function Home() {
     <div className="h-screen bg-background">
 
       <div className="bg-background h-[60%] flex items-center justify-center">
-        <h1 className="text-4xl font-bold">Translate</h1>
+        <h1 className="text-4xl font-bold">{ `${translatedText || 'Translate'}`}</h1>
       </div>
 
       <div className="bg-primary/80 h-[40%] rounded-tl-[20vw] relative overflow-hidden backdrop-blur-sm border-t border-l border-white/10"
