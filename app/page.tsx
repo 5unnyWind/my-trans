@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useDebounceFn, useRequest } from "ahooks";
+import { useRequest } from "ahooks";
+import { Textfit } from "react-textfit";
 import InputCursor from "./InputCursor";
 
 const languagesOptions = [
@@ -49,15 +50,15 @@ export default function Home() {
 
   const { data: translatedText } = useRequest(
     async () => {
-     if(!inputText.trim()) return "";
-     const res = await fetch("/api/translate", {
-      method: "POST",
-      body: JSON.stringify({
-        content: inputText,
-        targetLanguage: selectedLanguage,
-      }),
-     });
-     return res.json();
+      if (!inputText.trim()) return "";
+      const res = await fetch("/api/translate", {
+        method: "POST",
+        body: JSON.stringify({
+          content: inputText,
+          targetLanguage: selectedLanguage,
+        }),
+      });
+      return res.json();
     },
     {
       refreshDeps: [inputText, selectedLanguage],
@@ -148,9 +149,18 @@ export default function Home() {
 
   return (
     <div className="h-screen bg-background">
-
-      <div className="bg-background h-[60%] flex items-center justify-center">
-        <h1 className="text-4xl font-bold">{ `${translatedText || 'Translate'}`}</h1>
+      {/* 翻译后文本 */}
+      <div className="bg-background h-[60%] flex items-center justify-center px-8">
+        <div className="w-full h-full max-h-[80%] overflow-auto">
+          <Textfit
+            mode="multi"
+            min={16}
+            max={32}
+            className="w-full h-full flex items-center justify-center font-bold text-center"
+          >
+            {translatedText || 'Translate'}
+          </Textfit>
+        </div>
       </div>
 
       <div className="bg-primary/80 h-[40%] rounded-tl-[14rem] relative overflow-hidden backdrop-blur-sm border-t border-l border-white/10"
@@ -197,10 +207,10 @@ export default function Home() {
             const nextColorIndex = (index + 1) % colors.length;
             const isSelected = selectedLanguage === language.value;
             return (
-              <div 
-                key={language.value} 
+              <div
+                key={language.value}
                 onClick={() => setSelectedLanguage(language.value)}
-                className={`${isSelected ? 'mt-0' : 'mt-9'} h-full shrink-0 rounded-t-2xl px-4 py-2 text-black font-semibold backdrop-blur-sm border shadow-lg cursor-pointer transition-all duration-300 ${isSelected ? 'border-white/60' : 'border-white/30'}`} 
+                className={`${isSelected ? 'mt-0' : 'mt-9'} h-full shrink-0 rounded-t-2xl px-4 py-2 text-black font-semibold backdrop-blur-sm border shadow-lg cursor-pointer transition-all duration-300 ${isSelected ? 'border-white/60' : 'border-white/30'}`}
                 style={{
                   background: `linear-gradient(135deg, ${colors[colorIndex]}${isSelected ? 'FF' : '80'}, ${colors[nextColorIndex]}${isSelected ? 'FF' : '80'})`,
                   backdropFilter: 'blur(10px)'
