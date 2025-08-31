@@ -178,10 +178,7 @@ export default function Home() {
   }, [inputText]);
 
   return (
-    <div className="h-[100dvh] w-screen overflow-hidden bg-background" style={{
-      paddingBottom:'env(safe-area-inset-bottom)',
-      
-    }}>
+    <div className="h-[100dvh] w-screen overflow-hidden bg-background">
       {/* 翻译后文本 */}
       <div className="bg-background h-[60%] flex items-center justify-center px-8 relative">
         <div className="w-full h-full max-h-[80%] overflow-auto">
@@ -206,10 +203,10 @@ export default function Home() {
         )}
       </div>
 
-      <div className="bg-primary/80 h-[40%] rounded-tl-[12rem] relative overflow-hidden backdrop-blur-sm border-t border-l border-white/10"
+      <div id="input-container" className="bg-primary/80 h-[40%] rounded-tl-[12rem] relative overflow-hidden backdrop-blur-sm border-t border-l border-white/10"
         style={{
           background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.1) 0%, transparent 50%)',
-          backdropFilter: 'blur(10px)'
+          backdropFilter: 'blur(10px)',
         }}>
         {/* 光晕 */}
         {glows.map((glow, index) => (
