@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useDebounceFn } from "ahooks";
+import { useRequest } from "ahooks";
 import { Textfit } from "react-textfit";
 import InputCursor from "./InputCursor";
 
@@ -55,69 +55,21 @@ export default function Home() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [translatedText, setTranslatedText] = useState('');
-  const [isTranslating, setIsTranslating] = useState(false);
-
-  const translateWithStream = async (text: string, language: string) => {
-    if (!text.trim()) {
-      setTranslatedText('');
-      return;
-    }
-
-    setIsTranslating(true);
-    setTranslatedText('');
-
-    try {
-      const response = await fetch('/api/translate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+  const { data: translatedText } = useRequest(
+    async () => {
+      if (!inputText.trim()) return "";
+      const res = await fetch("/api/translate", {
+        method: "POST",
         body: JSON.stringify({
-          content: text,
-          targetLanguage: language,
+          content: inputText,
+          targetLanguage: selectedLanguage,
         }),
       });
-
-      if (!response.body) {
-        throw new Error('No response body');
-      }
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n');
-
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            try {
-              const data = JSON.parse(line.slice(6));
-              setTranslatedText(data.text);
-            } catch (e) {
-              // 忽略解析错误
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Translation error:', error);
-      setTranslatedText('Translation failed');
-    } finally {
-      setIsTranslating(false);
-    }
-  };
-
-  const { run: debouncedTranslate } = useDebounceFn(
-    (text: string, language: string) => {
-      translateWithStream(text, language);
+      return res.json();
     },
     {
-      wait: 500,
+      refreshDeps: [inputText, selectedLanguage],
+      debounceWait: 300,
     }
   );
 
@@ -251,11 +203,7 @@ export default function Home() {
             <textarea
               ref={inputRef}
               value={inputText}
-              onChange={(e) => {
-                const newText = e.target.value;
-                setInputText(newText);
-                debouncedTranslate(newText, selectedLanguage);
-              }}
+              onChange={(e) => setInputText(e.target.value)}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               className="w-full h-full bg-transparent border-none outline-none resize-none text-foreground text-lg font-semibold placeholder-gray-300 caret-transparent"
@@ -278,9 +226,6 @@ export default function Home() {
                 onClick={() => {
                   setSelectedLanguage(language.value);
                   localStorage.setItem('selectedLanguage', language.value);
-                  if (inputText.trim()) {
-                    debouncedTranslate(inputText, language.value);
-                  }
                 }}
                 className={`${isSelected ? 'mt-0' : 'mt-9'} h-full shrink-0 rounded-t-2xl px-4 py-2 text-black font-semibold backdrop-blur-sm border shadow-lg cursor-pointer transition-all duration-300 ${isSelected ? 'border-white/60' : 'border-white/30'}`}
                 style={{
